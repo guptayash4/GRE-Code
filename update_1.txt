@@ -1,0 +1,119 @@
+#include<iostream>
+#include<stdio.h>
+#include<stdlib.h>
+#include<string.h>
+#include<fstream>
+#include<algorithm>
+using namespace std;
+struct word
+{
+    char word[20];
+};
+struct number
+{
+    long int a;
+};
+int*arr;
+void add();
+void test();
+void create(int);
+void permute(int);
+int main()
+{
+    int choice=1;
+    cout<<"\nWelcome back Yash.!";
+    while(choice)
+    {
+        cout<<"\nEnter your choice : ";
+        cout<<"\n1.Add a word";
+        cout<<"\n2.Take a quick test";
+        cout<<"\n3.EXIT";
+        cin>>choice;
+        switch(choice)
+        {
+            case 1: add();
+                    break;
+            case 2: test();
+                    break;
+            default : cout<<"\nGood Bye Yash.!";
+                      cout<<"\nHope you learned something new today :D";
+                      return 0;
+
+        }
+    }
+    return 0;
+}
+void add()
+{
+    ofstream f1;
+    f1.open("word.txt",ios::app | ios::binary);
+    cout<<"\nEnter word : ";
+    word w1;
+    getchar();
+    gets(w1.word);
+    f1.write((char*)&w1,sizeof(w1));
+    f1.close();
+
+    ifstream f2;
+    f2.open("number.txt", ios :: binary);
+    if(!f2)
+     {
+         ofstream t1;
+         t1.open("number.txt", ios::binary | ios :: app);
+         number num;
+         num.a=0;
+         t1.write((char*)&num,sizeof(num));
+         t1.close();
+     }
+    f2.close();
+
+    ifstream f3;
+    ofstream f4;
+    f3.open("number.txt",ios::binary);
+    number num;
+    f3.read((char*)&num,sizeof(num));
+    num.a=num.a+1;
+    f4.open("temp.txt",ios::binary | ios::app);
+    f4.write((char*)&num,sizeof(num));
+    f3.close();
+    f4.close();
+    remove("number.txt");
+    rename("temp.txt","number.txt");
+}
+void test()
+{
+    ifstream f1;
+    f1.open("number.txt",ios::binary);
+    number num;
+    f1.read((char*)&num,sizeof(num));
+    create(num.a);
+    f1.close();
+    ifstream f2;
+    word w1;
+    for(int apk=0;apk<num.a;apk++)
+    {
+        f2.open("word.txt", ios::binary);
+        f2.seekg(arr[apk]*sizeof(word));
+        f2.read((char*)&w1,sizeof(w1));
+        cout<<"  "<<w1.word;
+        f2.close();
+    }
+
+}
+void create(int num)
+{
+    arr=(int*)malloc(num*sizeof(int));
+    for(int i=0;i<num;i++)
+     arr[i]=i;
+    permute(num);
+}
+void permute(int no)
+{
+    int pqr=rand()%30;
+    pqr=pqr+20;
+    int num=no*pqr;
+    do
+    {
+     std::next_permutation(arr,arr+no);
+    }while(num--);
+}
